@@ -1,0 +1,15 @@
+<div class="container-sm" >
+  <div style="margin-top: 100px; margin-left: auto; margin-right: auto; width: 400px; border: 1px solid #ced4da; padding: 20px;">
+    <form>
+      <div class="mb-3">
+        <label for="inputUsername" class="form-label">Username</label>
+        <input type="text" class="form-control" id="inputUsername" #newUsername>
+      </div>
+      <div class="mb-3">
+        <label for="inputPassword" class="form-label">Password</label>
+        <input type="password" class="form-control" id="inputPassword" #newPassword>
+      </div>
+      <button (click)="loginUser(newUsername, newPassword)" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
