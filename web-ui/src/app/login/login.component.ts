@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from './login.model';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-login',
@@ -11,12 +12,14 @@ export class LoginComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
+  readonly apiURL = environment.baseURL + "/api/signIn/";
+
   ngOnInit(): void {
   }
 
   loginUser(username: HTMLInputElement, password: HTMLInputElement): boolean {
-      console.log(`Login attempt: ${username.value} and link: ${password.value}`);
-      this.http.get('http://localhost:8080/api/signIn/' + username.value + '/' + password.value, { responseType: 'text' })
+      this.http
+        .get(this.apiURL + username.value + '/' + password.value, { responseType: 'text' })
         .subscribe(response => console.log(response));
       return false;
   }
