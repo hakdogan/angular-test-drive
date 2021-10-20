@@ -14,12 +14,12 @@ export class LoginComponent implements OnInit {
 
   readonly apiURL = environment.baseURL + "/api/signIn/";
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   loginUser(username: HTMLInputElement, password: HTMLInputElement): boolean {
-      this.http
-        .get(this.apiURL + username.value + '/' + password.value, { responseType: 'text' })
+    const user = new User(username.value, password.value);
+    this.http
+        .post(this.apiURL, user, { responseType: 'text'})
         .subscribe(response => console.log(response));
       return false;
   }

@@ -3,7 +3,7 @@ package org.jugistanbul.resource;
 import io.smallrye.jwt.build.Jwt;
 import io.vertx.core.http.HttpServerRequest;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jugistanbul.dto.UserDTO;
 import org.jugistanbul.entity.User;
 import org.jboss.logging.Logger;
 import org.wildfly.security.password.PasswordFactory;
@@ -13,9 +13,7 @@ import org.wildfly.security.password.util.ModularCrypt;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -38,14 +36,15 @@ public class SignInResource
     @ConfigProperty(name = "mp.jwt.verify.issuer", defaultValue = "https://jugistanbul.org/issuer")
     String issuer;
 
-    @GET
-    @Path("/signIn/{username}/{password}")
+    @POST
+    @Path("/signIn")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response signIn(@PathParam String username, @PathParam String password,
+    public Response signIn(final UserDTO userDTO,
                            @Context HttpServerRequest httpServerRequest) {
 
-        var user = User.findByUsername(username);
-        return user != null && verifyBCryptPassword(user.password, password)
+        var user = User.findByUsername(userDTO.username());
+        return user != null && verifyBCryptPassword(user.password, userDTO.password())
                 ? createSuccessLoginResponse(user, httpServerRequest) : createFailedLoginResponse();
 
     }
