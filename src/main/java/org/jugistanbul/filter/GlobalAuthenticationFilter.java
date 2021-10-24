@@ -1,6 +1,5 @@
 package org.jugistanbul.filter;
 
-import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerRequest;
 import org.jboss.logging.Logger;
 
@@ -8,9 +7,12 @@ import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /*
  * @author hakdogan (huseyin.akdogan@patikaglobal.com)
@@ -18,7 +20,7 @@ import java.io.IOException;
  */
 @Provider
 @Secured
-public class AuthenticationFilter implements ContainerRequestFilter
+public class GlobalAuthenticationFilter implements ContainerRequestFilter
 {
     @Inject
     Logger log;
@@ -34,10 +36,14 @@ public class AuthenticationFilter implements ContainerRequestFilter
 
         var path = uriInfo.getPath();
         var remoteAddress = httpServerRequest.remoteAddress().toString();
-        var auth = null != context.getHeaderString((String) HttpHeaders.AUTHORIZATION);
+        var auth = null != context.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         if (!auth) {
-            context.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            try {
+                context.abortWith(Response.seeOther(new URI("/")).build());
+            } catch (URISyntaxException e) {
+                log.error("URISyntaxException was thrown in AuthenticationFilter", e);
+            }
             return;
         }
 
