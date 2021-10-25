@@ -10,6 +10,7 @@
         <input type="password" class="form-control" id="inputPassword" placeholder="password" #newPassword>
       </div>
       <div class="clearfix">
+        <label *ngIf="errorMessage.length > 0">{{errorMessage}}</label>
         <button (click)="loginUser(newUsername, newPassword)" class="btn btn-primary float-end">Sign in</button>
       </div>
   </div>

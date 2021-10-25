@@ -10,7 +10,11 @@ import {environment} from "../../environments/environment";
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  errorMessage: string;
+
+  constructor(private http: HttpClient) {
+    this.errorMessage = '';
+  }
 
   readonly apiURL = environment.baseURL + "/api/signIn/";
 
@@ -20,7 +24,14 @@ export class LoginComponent implements OnInit {
     const user = new User(username.value, password.value);
     this.http
         .post(this.apiURL, user, { responseType: 'text'})
-        .subscribe(response => console.log(response));
+        .subscribe(response => console.log(response), error => {
+
+          this.errorMessage = error.statusText === 'Unauthorized'
+            ? 'Wrong username or password!'
+            : error.statusText;
+
+          console.log(error.statusText);
+        });
       return false;
   }
 }
