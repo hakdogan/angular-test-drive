@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
  */
 @Provider
 @Secured
-public class GlobalAuthenticationFilter implements ContainerRequestFilter
+public class WebSecurityFilter implements ContainerRequestFilter
 {
     @Inject
     Logger log;
