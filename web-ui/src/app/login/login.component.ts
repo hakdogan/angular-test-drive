@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {FormGroup, FormBuilder, AbstractControl, Validators} from "@angular/forms";
 import {HttpClient} from '@angular/common/http';
-import {User} from './login.model';
+import {LoginFormDTO} from './login.model';
 import {environment} from "../../environments/environment";
 
 @Component({
@@ -10,20 +11,30 @@ import {environment} from "../../environments/environment";
 })
 export class LoginComponent implements OnInit {
 
+  loginForm: FormGroup;
+  username: AbstractControl;
+  password: AbstractControl;
   errorMessage: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, fb: FormBuilder) {
     this.errorMessage = '';
+    this.loginForm = fb.group({
+      'username': ['', Validators.required],
+      'password': ['', Validators.required]
+    });
+
+    this.username = this.loginForm.controls['username'];
+    this.password = this.loginForm.controls['password'];
   }
 
   readonly apiURL = environment.baseURL + "/api/signIn/";
 
   ngOnInit(): void { }
 
-  loginUser(username: HTMLInputElement, password: HTMLInputElement): boolean {
-    const user = new User(username.value, password.value);
+  onSubmit(formDTO: LoginFormDTO): boolean {
+
     this.http
-        .post(this.apiURL, user, { responseType: 'text'})
+        .post(this.apiURL, formDTO, { responseType: 'text'})
         .subscribe(response => console.log(response), error => {
 
           this.errorMessage = error.statusText === 'Unauthorized'
@@ -32,6 +43,7 @@ export class LoginComponent implements OnInit {
 
           console.log(error.statusText);
         });
+
       return false;
   }
 }

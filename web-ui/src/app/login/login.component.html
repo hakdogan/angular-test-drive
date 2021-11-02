@@ -1,17 +1,20 @@
-<div class="container-sm" >
-  <div class="login">
+<form [formGroup]="loginForm"
+      (ngSubmit)="onSubmit(loginForm.value)">
+  <div class="container-sm">
+    <div class="login">
       <div class="mb-3">
         <blockquote class="blockquote">
           <p>Enter your username and password</p>
         </blockquote>
-        <input type="text" class="form-control" id="inputUsername" placeholder="username" #newUsername>
+        <input type="text" class="form-control" id="inputUsername" placeholder="username" [formControl]="loginForm.controls['username']">
       </div>
       <div class="mb-3">
-        <input type="password" class="form-control" id="inputPassword" placeholder="password" #newPassword>
+        <input type="password" class="form-control" id="inputPassword" placeholder="password" [formControl]="loginForm.controls['password']">
       </div>
       <div class="clearfix">
         <label *ngIf="errorMessage.length > 0">{{errorMessage}}</label>
-        <button (click)="loginUser(newUsername, newPassword)" class="btn btn-primary float-end">Sign in</button>
+        <button type="submit" class="btn btn-primary float-end">Sign in</button>
       </div>
+    </div>
   </div>
-</div>
+</form>
