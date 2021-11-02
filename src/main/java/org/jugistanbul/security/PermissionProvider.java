@@ -56,6 +56,6 @@ public class PermissionProvider
     }
 
     private boolean checkSignInRequest(final String path){
-        return path.equals(SIGIN_PAGE);
+        return path.startsWith(SIGIN_PAGE);
     }
 }
