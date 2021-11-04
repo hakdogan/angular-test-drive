@@ -14,19 +14,18 @@ import java.util.*;
 @ApplicationScoped
 public class PermissionProvider
 {
-    private static final String SIGIN_PAGE = "/api/signIn";
-
     Map<String, List<String>> pathAndRoleMapper;
 
     public PermissionProvider() {
         pathAndRoleMapper = Map.of("/app/admin", Collections.singletonList("admin"),
                 "/api/user/all", Collections.singletonList("admin"),
-                "/app/guest", List.of("admin", "guest"));
+                "/app/guest", List.of("admin", "guest"),
+                "/api/signIn", List.of("all"));
     }
 
     public boolean checkAuthentication(final String path, final ContainerRequestContext requestContext){
 
-        if(checkSignInRequest(path)){
+        if(isPermittedRequest(path)){
             return true;
         }
 
@@ -36,7 +35,7 @@ public class PermissionProvider
 
     public boolean checkPermission(final String path, final SecurityContext securityContext){
 
-        if(checkSignInRequest(path)){
+        if(isPermittedRequest(path)){
             return true;
         }
 
@@ -55,7 +54,14 @@ public class PermissionProvider
         return false;
     }
 
-    private boolean checkSignInRequest(final String path){
-        return path.startsWith(SIGIN_PAGE);
+    private boolean isPermittedRequest(final String path){
+        Optional<Boolean> permit = pathAndRoleMapper
+                .entrySet()
+                .stream()
+                .filter(p -> path.equals(path))
+                .map(p -> p.getValue().contains("all"))
+                .findAny();
+
+        return permit.isPresent();
     }
 }
