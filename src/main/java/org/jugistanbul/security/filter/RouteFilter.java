@@ -9,7 +9,7 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 /*
  * @author hakdogan (huseyin.akdogan@patikaglobal.com)
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 @WebFilter(urlPatterns = "/*")
 public class RouteFilter extends HttpFilter {
 
-    private static final Pattern FILE_NAME_PATTERN = Pattern.compile(".*[.][a-zA-Z\\d]+");
+    private static final String[] ROUTES = {"/login", "/user-list"};
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
@@ -27,9 +27,9 @@ public class RouteFilter extends HttpFilter {
         chain.doFilter(request, response);
 
         if (response.getStatus() == 404) {
-            var length = request.getContextPath().length();
-            var path = request.getRequestURI().substring(length).replaceAll("[/]+$", "");
-            if (!FILE_NAME_PATTERN.matcher(path).matches()) {
+            var path = request.getRequestURI();
+            var angularRoute = Arrays.stream(ROUTES).filter(path::equals).findAny();
+            if (angularRoute.isPresent()) {
                 try {
                     response.setStatus(200);
                     request.getRequestDispatcher("/").forward(request, response);
