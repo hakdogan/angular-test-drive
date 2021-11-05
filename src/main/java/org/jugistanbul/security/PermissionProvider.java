@@ -17,10 +17,10 @@ public class PermissionProvider
     Map<String, List<String>> pathAndRoleMapper;
 
     public PermissionProvider() {
-        pathAndRoleMapper = Map.of("/app/admin", Collections.singletonList("admin"),
-                "/api/user/all", Collections.singletonList("admin"),
-                "/app/guest", List.of("admin", "guest"),
-                "/api/signIn", List.of("all"));
+        pathAndRoleMapper = Map.of("/api/user/all", Collections.singletonList("admin"),
+                "/user-list", Collections.singletonList("admin"),
+                "/api/signIn", Collections.singletonList("all"),
+                "/app/guest", List.of("admin", "guest"));
     }
 
     public boolean checkAuthentication(final String path, final ContainerRequestContext requestContext){
@@ -55,12 +55,11 @@ public class PermissionProvider
     }
 
     private boolean isPermittedRequest(final String path){
-        Optional<Boolean> permit = pathAndRoleMapper
+        Optional<String> permit = pathAndRoleMapper
                 .entrySet()
                 .stream()
-                .filter(p -> path.equals(path))
-                .map(p -> p.getValue().contains("all"))
-                .findAny();
+                .filter(entrySet -> path.equals(entrySet.getKey()) && entrySet.getValue().contains("all"))
+                .map(Map.Entry::getKey).findAny();
 
         return permit.isPresent();
     }
