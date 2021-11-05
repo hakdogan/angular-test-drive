@@ -20,6 +20,7 @@ public class PermissionProvider
         pathAndRoleMapper = Map.of("/api/user/all", Collections.singletonList("admin"),
                 "/user-list", Collections.singletonList("admin"),
                 "/api/signIn", Collections.singletonList("all"),
+                "/login", Collections.singletonList("all"),
                 "/app/guest", List.of("admin", "guest"));
     }
 
