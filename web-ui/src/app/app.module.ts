@@ -20,6 +20,7 @@ import { UserListComponent } from './user-list/user-list.component';
     BrowserModule,
     RouterModule.forRoot([
       {path: 'login', component: LoginComponent},
+      {path: 'user-list', component: UserListComponent},
       {path: '', redirectTo: '/login', pathMatch: 'full'}
     ]),
     ReactiveFormsModule,
