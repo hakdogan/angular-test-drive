@@ -8,20 +8,23 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NavbarComponent,
-    UserListComponent
+    UserListComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot([
       {path: 'login', component: LoginComponent},
+      {path: 'home', component: HomePageComponent},
       {path: 'user-list', component: UserListComponent},
-      {path: '', redirectTo: '/login', pathMatch: 'full'}
+      {path: '', redirectTo: 'home', pathMatch: 'full'}
     ]),
     ReactiveFormsModule,
     AppRoutingModule,
