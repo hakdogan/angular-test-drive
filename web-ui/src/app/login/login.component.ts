@@ -35,8 +35,10 @@ export class LoginComponent implements OnInit {
 
     this.http
         .post(this.apiURL, formDTO, { responseType: 'text'})
-        .subscribe(response => console.log(response), error => {
-
+        .subscribe(response => {
+          console.log(response);
+          window.location.href = "/home"
+        }, error => {
           this.errorMessage = error.statusText === 'Unauthorized'
             ? 'Wrong username or password!'
             : error.statusText;
