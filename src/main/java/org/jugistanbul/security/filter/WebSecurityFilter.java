@@ -35,7 +35,7 @@ public class WebSecurityFilter implements ContainerRequestFilter
 
         if(!permissionProvider.checkAuthentication(path, context)){
             try {
-                context.abortWith(Response.seeOther(new URI("/")).build());
+                context.abortWith(Response.seeOther(new URI("login")).build());
             } catch (URISyntaxException e) {
                 log.error("URISyntaxException was thrown in AuthenticationFilter", e);
             }
@@ -44,8 +44,7 @@ public class WebSecurityFilter implements ContainerRequestFilter
 
         var permission = permissionProvider.checkPermission(path, context.getSecurityContext());
         if (!permission) {
-            context.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-            return;
+            context.abortWith(Response.status(Response.Status.FORBIDDEN).build());
         }
     }
 }
