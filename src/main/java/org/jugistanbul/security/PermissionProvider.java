@@ -1,6 +1,5 @@
 package org.jugistanbul.security;
 
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -30,8 +29,7 @@ public class PermissionProvider
             return true;
         }
 
-        var auth = null != requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        return auth;
+        return null != requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
     }
 
     public boolean checkPermission(final String path, final SecurityContext securityContext){
