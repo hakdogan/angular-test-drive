@@ -16,9 +16,9 @@ import java.util.Arrays;
  * Created on 5.11.2021
  */
 @WebFilter(urlPatterns = "/*")
-public class RouteFilter extends HttpFilter {
-
-    private static final String[] ROUTES = {"/login", "/user-list"};
+public class RouteFilter extends HttpFilter
+{
+    private static final String[] ROUTES = {"/login", "/home", "/user-list"};
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
