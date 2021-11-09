@@ -1,7 +1,6 @@
 package org.jugistanbul.resource;
 
 import io.smallrye.jwt.build.Jwt;
-import io.vertx.core.http.HttpServerRequest;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jugistanbul.dto.UserDTO;
 import org.jugistanbul.entity.User;
@@ -40,12 +39,11 @@ public class SignInResource
     @Path("/signIn")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response signIn(final UserDTO userDTO,
-                           @Context HttpServerRequest httpServerRequest) {
+    public Response signIn(final UserDTO userDTO, @Context UriInfo uriInfo) {
 
         var user = User.findByUsername(userDTO.username());
         return user != null && verifyBCryptPassword(user.password, userDTO.password())
-                ? createSuccessLoginResponse(user, httpServerRequest) : createFailedLoginResponse();
+                ? createSuccessLoginResponse(user, uriInfo) : createFailedLoginResponse();
 
     }
 
@@ -64,7 +62,7 @@ public class SignInResource
         return false;
     }
 
-    private Response createSuccessLoginResponse(final User user, final HttpServerRequest httpServerRequest) {
+    private Response createSuccessLoginResponse(final User user, UriInfo uriInfo) {
         var token = Jwt.issuer(issuer)
                 .upn(user.username)
                 .claim("userId", user.id)
@@ -75,7 +73,7 @@ public class SignInResource
         return Response.ok(token, MediaType.TEXT_PLAIN_TYPE)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .expires(Date.from(Instant.now().plus(Duration.ofMinutes(30))))
-                .cookie(new NewCookie("auth-token", token, "/", httpServerRequest.remoteAddress().hostName(),
+                .cookie(new NewCookie("auth-token", token, "/", uriInfo.getBaseUri().getHost(),
                         null, 60 * 30, false)).build();
 
     }
