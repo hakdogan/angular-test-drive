@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     this.password = this.loginForm.controls['password'];
   }
 
-  readonly apiURL = environment.baseURL + "/api/signIn/";
+  readonly apiURL = environment.baseURL + "/api/signIn";
 
   ngOnInit(): void { }
 
