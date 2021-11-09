@@ -23,20 +23,11 @@ public class PermissionProvider
                 "/app/guest", List.of("admin", "guest"));
     }
 
-    public boolean checkAuthentication(final String path, final ContainerRequestContext requestContext){
-
-        if(isPermittedRequest(path)){
-            return true;
-        }
-
+    public boolean checkAuthentication(final ContainerRequestContext requestContext){
         return null != requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
     }
 
     public boolean checkPermission(final String path, final SecurityContext securityContext){
-
-        if(isPermittedRequest(path)){
-            return true;
-        }
 
         Optional<Map.Entry<String, List<String>>> matchedPath =
                 pathAndRoleMapper
@@ -53,7 +44,7 @@ public class PermissionProvider
         return false;
     }
 
-    private boolean isPermittedRequest(final String path){
+    public boolean isPermitted(final String path){
         Optional<String> permit = pathAndRoleMapper
                 .entrySet()
                 .stream()
