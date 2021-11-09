@@ -33,7 +33,11 @@ public class WebSecurityFilter implements ContainerRequestFilter
         var uriInfo = context.getUriInfo();
         var path = uriInfo.getPath();
 
-        if(!permissionProvider.checkAuthentication(path, context)){
+        if(permissionProvider.isPermitted(path)) {
+            return;
+        }
+
+        if(!permissionProvider.checkAuthentication(context)){
             try {
                 context.abortWith(Response.seeOther(new URI("login")).build());
             } catch (URISyntaxException e) {
