@@ -7,9 +7,11 @@
           <p>Enter your username and password</p>
         </blockquote>
         <input type="text" class="form-control" id="inputUsername" placeholder="username" [formControl]="loginForm.controls['username']">
+        <p *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].touched">Username is <mark>required!</mark></p>
       </div>
       <div class="mb-3">
         <input type="password" class="form-control" id="inputPassword" placeholder="password" [formControl]="loginForm.controls['password']">
+        <p *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched">Password is <mark>required!</mark></p>
       </div>
       <div class="clearfix">
         <label *ngIf="errorMessage.length > 0">{{errorMessage}}</label>

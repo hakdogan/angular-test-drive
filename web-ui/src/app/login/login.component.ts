@@ -12,8 +12,6 @@ import {environment} from "../../environments/environment";
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  username: AbstractControl;
-  password: AbstractControl;
   errorMessage: string;
 
   constructor(private http: HttpClient, fb: FormBuilder) {
@@ -22,9 +20,6 @@ export class LoginComponent implements OnInit {
       'username': ['', Validators.required],
       'password': ['', Validators.required]
     });
-
-    this.username = this.loginForm.controls['username'];
-    this.password = this.loginForm.controls['password'];
   }
 
   readonly apiURL = environment.baseURL + "/api/signIn";
