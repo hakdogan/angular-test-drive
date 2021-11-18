@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { TokenInterceptorComponent } from './token-interceptor/token-interceptor.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { HomePageComponent } from './home-page/home-page.component';
     LoginComponent,
     NavbarComponent,
     UserListComponent,
-    HomePageComponent
+    HomePageComponent,
+    TokenInterceptorComponent
   ],
   imports: [
     BrowserModule,

@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
         .post(this.apiURL, formDTO, { responseType: 'text'})
         .subscribe(response => {
           console.log(response);
-          window.location.href = "/home"
+          window.location.href = "/user-list";
         }, error => {
           this.errorMessage = error.statusText === 'Unauthorized'
             ? 'Wrong username or password!'
