@@ -1,4 +1,4 @@
 export const environment = {
-  baseURL: 'https://angular-test-drive.hakdogan.com/',
+  baseURL: 'http://localhost:8080',
   production: true
 };
