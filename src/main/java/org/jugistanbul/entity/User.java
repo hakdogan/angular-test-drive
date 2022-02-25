@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.List;
 
-import io.quarkus.logging.Log;
-
 /*
  * @author hakdogan (huseyin.akdogan@patikaglobal.com)
  * Created on 18.10.2021

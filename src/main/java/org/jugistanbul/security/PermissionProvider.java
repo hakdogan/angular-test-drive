@@ -5,6 +5,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.SecurityContext;
 import java.util.*;
+import java.util.function.Predicate;
 
 /*
  * @author hakdogan (huseyin.akdogan@patikaglobal.com)
@@ -13,14 +14,10 @@ import java.util.*;
 @ApplicationScoped
 public class PermissionProvider
 {
-    Map<String, List<String>> pathAndRoleMapper;
+    private final RequestMatcherRegistry requestMatcherRegistry;
 
-    public PermissionProvider() {
-        pathAndRoleMapper = Map.of("/api/user/all", Collections.singletonList("admin"),
-                "/user-list", Collections.singletonList("admin"),
-                "/api/signIn", Collections.singletonList("all"),
-                "/login", Collections.singletonList("all"),
-                "/app/guest", List.of("admin", "guest"));
+    public PermissionProvider(final RequestMatcherRegistry requestMatcherRegistry){
+        this.requestMatcherRegistry = requestMatcherRegistry;
     }
 
     public boolean checkAuthentication(final ContainerRequestContext requestContext){
@@ -29,28 +26,21 @@ public class PermissionProvider
 
     public boolean checkPermission(final String path, final SecurityContext securityContext){
 
-        Optional<Map.Entry<String, List<String>>> matchedPath =
-                pathAndRoleMapper
-                    .entrySet()
-                    .stream()
-                    .filter(k -> k.getKey().startsWith(path))
-                    .findAny();
-
-        if(matchedPath.isPresent()){
-            var role = matchedPath.get().getValue().stream().filter(securityContext::isUserInRole).findAny();
-            return role.isPresent();
-        }
-
-        return false;
+        return requestMatcherRegistry
+                .resources().stream().anyMatch(isRoleAllowed(path, securityContext));
     }
 
     public boolean isPermitted(final String path){
-        Optional<String> permit = pathAndRoleMapper
-                .entrySet()
-                .stream()
-                .filter(entrySet -> path.equals(entrySet.getKey()) && entrySet.getValue().contains("all"))
-                .map(Map.Entry::getKey).findAny();
+        return requestMatcherRegistry
+                .resources().stream().anyMatch(isPathAllowed(path));
+    }
 
-        return permit.isPresent();
+    private Predicate<Resource> isPathAllowed(final String path){
+        return resource -> resource.permitAll() && resource.path().equals(path);
+    }
+
+    private Predicate<Resource> isRoleAllowed(final String path, final SecurityContext securityContext){
+        return resource -> resource.path().equals(path)
+                && Arrays.stream(resource.roles()).anyMatch(securityContext::isUserInRole);
     }
 }
