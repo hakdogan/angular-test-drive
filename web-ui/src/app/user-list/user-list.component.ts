@@ -21,9 +21,6 @@ export class UserListComponent implements OnInit {
   }
 
   callUsers(){
-    console.log("********** Call Users **********");
-    console.log(this.apiURL);
-
     this.http.get<UserDTO[]>(this.apiURL)
       .subscribe({
         next: this.renderTable.bind(this),
